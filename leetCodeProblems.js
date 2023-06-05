@@ -1234,10 +1234,97 @@ var fizzBuzz = function (n) {
   return result;
 };
 
-
 //swuares of a sorted array
 
 //first id create a new array of the squared numbers in the same order, then perform a sort
 // js sort is O(nlogn)
 
-var sortedSquares = function(nums)
+// var sortedSquares = function(nums)
+
+/////
+//// last stone weight
+/// given array of integers stones each integer is the wieght
+// each turn take the two heaviest stones and smash together
+// if x=y both stones destroyed
+// if x!=y x is destroyed and y has weight y-x
+
+/// create recursive approach with base case of stone.length ===1 => returning the integer
+// and base case 0 returning 0
+
+var lastStoneWeight = function (stones) {
+  if (!stones.length) {
+    return 0;
+  }
+
+  if (stones.length === 1) {
+    return stones[0];
+  }
+
+  const sortedStones = stones.sort((a, b) => a - b);
+
+  const x = sortedStones[sortedStones.length - 2];
+  const y = sortedStones[sortedStones.length - 1];
+  if (x === y) {
+    sortedStones.splice(-2, 2);
+    return lastStoneWeight(sortedStones);
+  } else if (x != y) {
+    let newStones = sortedStones.splice(-2, 2);
+    sortedStones.push(y - x);
+    return lastStoneWeight(sortedStones);
+  }
+};
+
+// console.log(lastStoneWeight([2, 7, 4, 1, 8, 1]));
+
+///
+
+var circularGameLosers = function (n, k) {
+  //create a dictionary object out of each person in circle n
+  //count number of times each person gets passed the ball
+  // check on every pass if any person has reached
+  let count = {};
+  for (let i = 1; i < n + 1; i++) {
+    count[i] = 0;
+  }
+
+  let holderIndex = 1;
+  let jump = 1;
+
+  while (checkCount(count)) {
+    count[holderIndex] += 1;
+    holderIndex += k * jump;
+    if (holderIndex >= n) {
+      if (holderIndex % n === 0) {
+        holderIndex = n;
+      } else {
+        holderIndex = holderIndex % n;
+      }
+    }
+    jump += 1;
+  }
+  return returnLosers(count);
+};
+
+const checkCount = (dict) => {
+  const keys = Object.keys(dict);
+  for (let i = 0; i < keys.length; i++) {
+    if (dict[keys[i]] === 2) {
+      return false;
+    }
+  }
+  return true;
+};
+
+const returnLosers = (dict) => {
+  const keys = Object.keys(dict);
+  let loser = [];
+  for (let i = 0; i < keys.length; i++) {
+    if (dict[keys[i]] === 0) {
+      loser.push(keys[i]);
+    }
+  }
+  return loser;
+};
+
+console.log(circularGameLosers(1, 1));
+console.log(circularGameLosers(5, 2));
