@@ -1326,5 +1326,87 @@ const returnLosers = (dict) => {
   return loser;
 };
 
-console.log(circularGameLosers(1, 1));
-console.log(circularGameLosers(5, 2));
+// console.log(circularGameLosers(1, 1));
+// console.log(circularGameLosers(5, 2));
+
+// maximum sum wth exactly k elements
+// input array of nums and k
+// do this k times - take largest number in array add to running total and then replace it with that number +1
+
+var maximizeSum = function (nums, k) {
+  // initialize running total
+  /// while k >0 perform function and decrement k and add to total and change array
+  // not sure if i need to sort nums first
+  nums.sort((a, b) => a - b);
+  let total = 0;
+
+  while (k > 0) {
+    total += nums[nums.length - 1];
+    nums[nums.length - 1] += 1;
+    k -= 1;
+  }
+  return total;
+};
+
+/////
+//given array nums find biggest sum of nonadjacent numbers
+
+// return larger sum
+
+var rob = function (nums) {
+  ////solution from leetcode
+  /// folllow along and comment
+
+  if (nums.length <= 2) {
+    // if length is 2 or less then just take max from array
+    return Math.max(...nums);
+  }
+  let first = Math.max(nums[0], nums[1]); //bigger of first two nums
+  let second = nums[0]; //  first num
+  for (let i = 2; i < nums.length; ++i) {
+    let current = Math.max(first, second + nums[i]);
+    // finds whether first or second num are larger sum with 3rd (i)num
+    second = first;
+    first = current; // this is a cummulative total
+  }
+  return first;
+};
+
+// merge sorted array
+// given 2 integer arrays sorted in non decreasing order
+// merge into single array sorted in non decreasing order
+//nums1 has length of m+n where first m is the array and second n is placeholders for the integers from num2
+// set to 0 and shoul dbe ignored
+
+var merge = function (nums1, m, nums2, n) {
+  /// initialize moving index for nums1
+  /// loop through nums2 checking against moving index for nums 1 and splicing in if its the right spot
+  // if you splice in number then pop off a zero from nums1
+
+  let nums1Index = 0;
+  let spliceCount = 0;
+
+  for (let i = 0; i < nums2.length; i++) {
+    console.log('loop');
+    console.log(nums1[nums1Index]);
+    console.log(nums2[i]);
+    if (
+      nums2[i] <= nums1[nums1Index] ||
+      (nums1Index >= m + spliceCount && nums1[nums1Index] === 0)
+    ) {
+      console.log('splicing');
+      nums1.splice(nums1Index, 0, nums2[i]);
+      nums1Index += 1;
+      nums1.pop();
+      spliceCount += 1;
+    } else {
+      console.log('next');
+      nums1Index += 1;
+      i -= 1;
+    }
+  }
+  return nums1;
+};
+
+// console.log(merge([1, 2, 3, 0, 0, 0], 3, [2, 5, 6], 3));
+console.log(merge([-1, 3, 0, 0, 0, 0, 0], 2, [0, 0, 1, 2, 3], 5)); /// should be [-1,0,0,1,2,3,3]
